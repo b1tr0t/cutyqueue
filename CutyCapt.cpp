@@ -129,9 +129,8 @@ CutyPage::setAttribute(QWebSettings::WebAttribute option,
 
 // TODO: Consider merging some of main() and CutyCap
 
-CutyCapt::CutyCapt(CutyPage* page,int delay, OutputFormat format, int scaledWidth) {
+CutyCapt::CutyCapt(CutyPage* page,int delay, OutputFormat format) {
   mPage = page;
-  mScaledWidth = scaledWidth;
   mDelay = delay;
   mSawInitialLayout = false;
   mSawDocumentComplete = false;
@@ -268,9 +267,6 @@ CaptHelp(void) {
     "  --queue-port=<string>          default: 22201                               \n"
     "  --primary-queue-name=<string>          default: queue_fast                  \n"
     "  --secondary-queue-name=<string>        default: queue_slow                  \n"
-    "  --viewport-width=<int>         Viewport width (dflt: 980, iPhone) \n"
-    "  --viewport-height=<int>        dflt: 1470\n"
-    "  --scaled-width=<int>           Width to scale thumb to (dflt: 245)         \n"
     "  --max-wait=<ms>                Don't wait more than (default: 9000, inf: 0)\n"
     "  --max-runs=<int>               Run <int> times before exiting (dflt: 50)\n"
     "  --sleep-check=<int>ms          check for new items every <int>ms (dflt: 100)\n"
@@ -334,16 +330,11 @@ main(int argc, char *argv[]) {
   const char* argUrl = NULL;
   const char* argUserStyle = NULL;
   const char* argIconDbPath = NULL;
-
-
   
   const char* queueAddress = "localhost";
   int queuePort = 22201;
   const char* primaryQueueName = "queue_fast";
   const char* secondaryQueueName = "queue_slow";
-  int viewportWidth = 980;
-  int viewportHeight = 1470;
-  int scaledWidth = 245;
   int maxRuns = 50;
   int sleepCheck = 100;
 
@@ -413,18 +404,6 @@ main(int argc, char *argv[]) {
 
     else if (strncmp("--secondary-queue-name", s, nlen) == 0) {
         secondaryQueueName = value;
-    }
-
-    else if (strncmp("--viewport-width", s, nlen) == 0) {
-      viewportWidth = (unsigned int)atoi(value);
-    }
-
-    else if (strncmp("--viewport-height", s, nlen) == 0) {
-      viewportHeight = (unsigned int)atoi(value);
-    }
-    
-    else if (strncmp("--scaled-width", s, nlen) == 0) {
-      scaledWidth = (unsigned int)atoi(value);
     }
     
     else if (strncmp("--max-runs", s, nlen) == 0) {
@@ -537,7 +516,7 @@ main(int argc, char *argv[]) {
       return EXIT_FAILURE;
   }
 
-  CutyCapt main(&page, argDelay, format, scaledWidth);
+  CutyCapt main(&page, argDelay, format);
 
   app.connect(&page,
     SIGNAL(loadFinished(bool)),
@@ -563,8 +542,6 @@ main(int argc, char *argv[]) {
   // is not currently possible (Qt 4.4.0) as far as I can tell.
   page.mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
   page.mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);
-  page.setViewportSize( QSize(viewportWidth, viewportHeight) );
-
 
   // set up the memcache
   memcached_server_st *servers = NULL;
@@ -620,13 +597,23 @@ main(int argc, char *argv[]) {
       Tokenize(queued_message, tokens, "|*|");
       const char* url = tokens[0].c_str();
       QString outfile = tokens[1].c_str();
+      const int viewportWidth = atoi(tokens[2].c_str());
+      const int viewportHeight = atoi(tokens[3].c_str());
+      const int scaledWidth = atoi(tokens[4].c_str());
+      
       main.mOutput = outfile;
+      main.mScaledWidth = scaledWidth;
       
       cout << "-- url is: '" << url << "'" << endl;
       cout << "-- filename is: '" << main.mOutput.toStdString() << "'" << endl;
+      cout << "-- vport width is: '" << viewportWidth << "'" << endl;
+      cout << "-- vport height is: '" << viewportHeight << "'" << endl;
+      cout << "-- scaledWidth is: '" << main.mScaledWidth << "'" << endl;
       
       qurl.setUrl(url);
       req.setUrl( qurl );
+
+      page.setViewportSize( QSize(viewportWidth, viewportHeight) );
 
       if (!body.isNull())
         page.mainFrame()->load(req, method, body);

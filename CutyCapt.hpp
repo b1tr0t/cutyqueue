@@ -37,8 +37,9 @@ public:
     RenderTreeFormat, PngFormat, JpegFormat, MngFormat, TiffFormat, GifFormat,
     BmpFormat, PpmFormat, XbmFormat, XpmFormat, OtherFormat };
 
-  CutyCapt(CutyPage* page, int delay, OutputFormat format, int scaledWidth);
+  CutyCapt(CutyPage* page, int delay, OutputFormat format);
   QString      mOutput;
+  int mScaledWidth;
   
 private slots:
   void DocumentComplete(bool ok);
@@ -49,7 +50,6 @@ private slots:
 private:
   void TryDelayedRender();
   void saveSnapshot();
-  int mScaledWidth;
   bool mSawInitialLayout;
   bool mSawDocumentComplete;
 
