@@ -1,0 +1,9 @@
+* This isn't quite ready to be a plug and play open source project. :P 
+
+* Vague instructions: run 'qmake', you must have the c++ memcached libraries installed.  Add -lmemcached to the resulting makefile library list.  
+
+* requires the memcacheq project available at: http://memcachedb.org/memcacheq/
+
+* Implements reading from a (hard coded) priority queue and slow queue.  It will ALWAYS prefer the priority queue.  
+
+* This whole thing is hackish and ugly and I'd rather rewrite the whole thing in pythonQt, but it does work.  
