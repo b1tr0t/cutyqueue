@@ -40,6 +40,8 @@ public:
   CutyCapt(CutyPage* page, int delay, OutputFormat format);
   QString      mOutput;
   int mScaledWidth;
+  int mViewPortWidth;
+  int mViewPortHeight;
   
 private slots:
   void DocumentComplete(bool ok);
@@ -52,6 +54,7 @@ private:
   void saveSnapshot();
   bool mSawInitialLayout;
   bool mSawDocumentComplete;
+
 
 protected:
   int          mDelay;

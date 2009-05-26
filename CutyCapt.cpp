@@ -195,7 +195,7 @@ CutyCapt::saveSnapshot() {
   
   mainFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff); 
   mainFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);      
-  mPage.setViewportSize( QSize(viewportWidth, viewportHeight) );
+  mPage->setViewportSize( QSize(mViewPortWidth, mViewPortHeight) );
   
 
   for (int ix = 0; CutyExtMap[ix].id != OtherFormat; ++ix)
@@ -608,6 +608,8 @@ main(int argc, char *argv[]) {
       
       main.mOutput = outfile;
       main.mScaledWidth = scaledWidth;
+      main.mViewPortWidth = viewportWidth;
+      main.mViewPortHeight = viewportHeight;
       
       cout << "-- url is: '" << url << "'" << endl;
       cout << "-- filename is: '" << main.mOutput.toStdString() << "'" << endl;
