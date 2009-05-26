@@ -243,10 +243,10 @@ CutyCapt::saveSnapshot() {
       break;
     }
     default: {
-      QImage image(mPage->viewportSize(), QImage::Format_ARGB32);
-      painter.begin(&image);
       mainFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
       mainFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);      
+      QImage image(mPage->viewportSize(), QImage::Format_ARGB32);
+      painter.begin(&image);
       mainFrame->render(&painter);
       painter.end();
       // TODO: add quality
