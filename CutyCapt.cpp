@@ -192,6 +192,11 @@ CutyCapt::saveSnapshot() {
   QWebFrame *mainFrame = mPage->mainFrame();
   QPainter painter;
   const char* format = NULL;
+  
+  mainFrame->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff); 
+  mainFrame->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);      
+  mPage.setViewportSize( QSize(viewportWidth, viewportHeight) );
+  
 
   for (int ix = 0; CutyExtMap[ix].id != OtherFormat; ++ix)
     if (CutyExtMap[ix].id == mFormat)
@@ -613,15 +618,12 @@ main(int argc, char *argv[]) {
       qurl.setUrl(url);
       req.setUrl( qurl );
 
+      page.setViewportSize( QSize(viewportWidth, viewportHeight) );
+
       if (!body.isNull())
         page.mainFrame()->load(req, method, body);
       else
         page.mainFrame()->load(req, method);
-
-        page.mainFrame()->setScrollBarPolicy(Qt::Horizontal, Qt::ScrollBarAlwaysOff);
-        page.mainFrame()->setScrollBarPolicy(Qt::Vertical, Qt::ScrollBarAlwaysOff);      
-        page.setViewportSize( QSize(viewportWidth, viewportHeight) );
-
       
       timer->start(argMaxWait);
       app.exec();
