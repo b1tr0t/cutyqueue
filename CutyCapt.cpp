@@ -281,10 +281,10 @@ CaptHelp(void) {
     "  --app-name=<name>              appName used in User-Agent; default is none  \n"
     "  --app-version=<version>        appVers used in User-Agent; default is none  \n"
     "  --user-agent=<string>          Override the User-Agent header Qt would set  \n"
-    "  --javascript=<on|off>          JavaScript execution (default: on)           \n"
-    "  --java=<on|off>                Java execution (default: unknown)            \n"
-    "  --plugins=<on|off>             Plugin execution (default: unknown)          \n"
-    "  --private-browsing=<on|off>    Private browsing (default: unknown)          \n"
+    "  --tt=<on|off>          JavaScript execution (default: off)           \n"
+    "  --java=<on|off>                Java execution (default: off)            \n"
+    "  --plugins=<on|off>             Plugin execution (default: off)          \n"
+    "  --private-browsing=<on|off>    Private browsing (default: off)          \n"
     "  --auto-load-images=<on|off>    Automatic image loading (default: on)        \n"
     "  --js-can-open-windows=<on|off> Script can open windows? (default: unknown)  \n"
     "  --js-can-access-clipboard=<on|off> Script clipboard privs (default: unknown)\n"
@@ -347,6 +347,16 @@ main(int argc, char *argv[]) {
     QNetworkAccessManager::GetOperation;
   QByteArray body;
   QNetworkRequest req;
+
+
+  QString off = "off";
+  // defaults:
+  page.setAttribute(QWebSettings::JavascriptEnabled, off);
+  page.setAttribute(QWebSettings::JavaEnabled, off);
+  page.setAttribute(QWebSettings::PluginsEnabled, off);
+  page.setAttribute(QWebSettings::JavascriptCanOpenWindows, off);
+  page.setAttribute(QWebSettings::JavascriptCanAccessClipboard, off);
+  page.setAttribute(QWebSettings::DeveloperExtrasEnabled, off);
 
   // Parse command line parameters
   for (int ax = 1; ax < argc; ++ax) {

@@ -1,15 +1,5 @@
 #include <QtWebKit>
 
-struct cacheresult
-{
-  char * url;
-  char * filename;
-};
-
-cacheresult
-    readQueue();
-
-
 class CutyPage : public QWebPage {
   Q_OBJECT
 
