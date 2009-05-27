@@ -350,6 +350,8 @@ main(int argc, char *argv[]) {
 
 
   QString off = "off";
+  QString on = "on";
+
   // defaults:
   page.setAttribute(QWebSettings::JavascriptEnabled, off);
   page.setAttribute(QWebSettings::JavaEnabled, off);
@@ -357,6 +359,9 @@ main(int argc, char *argv[]) {
   page.setAttribute(QWebSettings::JavascriptCanOpenWindows, off);
   page.setAttribute(QWebSettings::JavascriptCanAccessClipboard, off);
   page.setAttribute(QWebSettings::DeveloperExtrasEnabled, off);
+  page.setAttribute(QWebSettings::PrivateBrowsingEnabled, on);
+
+
 
   // Parse command line parameters
   for (int ax = 1; ax < argc; ++ax) {
