@@ -27,6 +27,7 @@ PRIMARYQUEUENAME="queue_fast"
 SECONDARYQUEUENAME="queue_slow"
 SLEEPCHECK="100"
 MAXREQUESTS="50"
+MAXREQUESTTIME="3500" # in milliseconds
 
 INSTANCES="CC_1 CC_2 CC_3"
 
@@ -53,7 +54,7 @@ d_start()
         	if [[ -n `ps auxwww | grep loop_thumbnailer | grep $INSTANCE | head -1` ]]; then
             		echo -n " already running!"
         	else
-            		$CUTYCAPT_DIR/loop_thumbnailer.sh $PRIMARYQUEUENAME $SECONDARYQUEUENAME $SLEEPCHECK $MAXREQUESTS $INSTANCE &
+            		$CUTYCAPT_DIR/loop_thumbnailer.sh $PRIMARYQUEUENAME $SECONDARYQUEUENAME $SLEEPCHECK $MAXREQUESTS $INSTANCE $MAXREQUESTTIME &
             		echo -n " . . . started!"
         	fi
     	fi
