@@ -32,8 +32,6 @@
 #include <vector>
 #include <libmemcached/memcached.h>
 
-
-
 using namespace std;
 
 #ifdef STATIC_PLUGINS
@@ -249,6 +247,15 @@ CutyCapt::saveSnapshot() {
       painter.end();
       // TODO: add quality
       image = image.scaledToWidth(mScaledWidth, Qt::SmoothTransformation);
+      
+      if (mCropWidth != 0 && mCropHeight != 0) { 
+          QRect rect (mOriginX, mOriginY, mCropWidth, mCropHeight);
+         //  QRect rect (0, 0, mCropWidth, mCropHeight);
+
+          image = image.copy(rect);
+          //image = image.copy(mOriginX, mOriginY, mCropWidth, mCropHeight);
+      }
+
       image.save(mOutput, format);
     }
   };
@@ -607,23 +614,51 @@ main(int argc, char *argv[]) {
               continue;       
           }
       }
-      // cout << "-- queued message is: '" << queued_message << "'" << endl;
+      cout << "-- queued message is: '" << queued_message << "'" << endl;
 
       Tokenize(queued_message, tokens, "|*|");
+      // required params:
       const char* url = tokens[0].c_str();
       QString outfile = tokens[1].c_str();
       const int viewportWidth = atoi(tokens[2].c_str());
       const int viewportHeight = atoi(tokens[3].c_str());
       const int scaledWidth = atoi(tokens[4].c_str());
       
+      // optional params:
+      int originX = 0;   
+      int originY = 0;
+      int cropWidth = 0;
+      int cropHeight = 0;
+ 
+      cout << "-- ready to check sizes " << tokens.size() << endl;
+      if (tokens.size() > 5) { 
+          originX = atoi(tokens[5].c_str());   
+          originY = atoi(tokens[6].c_str());
+          cropWidth = atoi(tokens[7].c_str());
+          cropHeight = atoi(tokens[8].c_str());          
+         } else { 
+             cout << "-- no optional parameters" << endl;             
+      }
+      cout << "-- done" << endl;
+    
+
       main.mOutput = outfile;
       main.mScaledWidth = scaledWidth;
+      main.mOriginX = originX;
+      main.mOriginY = originY;
+      main.mCropWidth = cropWidth;
+      main.mCropHeight = cropHeight;
       
       cout << "-- url is: '" << url << "'" << endl;
       cout << "-- filename is: '" << main.mOutput.toStdString() << "'" << endl;
       cout << "-- vport width is: '" << viewportWidth << "'" << endl;
       cout << "-- vport height is: '" << viewportHeight << "'" << endl;
       cout << "-- scaledWidth is: '" << main.mScaledWidth << "'" << endl;
+      cout << "-- originX is: '" << main.mOriginX << "'" << endl;
+      cout << "-- originY is: '" << main.mOriginY << "'" << endl;
+      cout << "-- cropWidth is: '" << main.mCropWidth << "'" << endl;
+      cout << "-- cropHeight is: '" << main.mCropHeight << "'" << endl;
+
       
       qurl.setUrl(url);
       req.setUrl( qurl );

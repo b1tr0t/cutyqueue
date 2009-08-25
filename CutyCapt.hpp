@@ -30,6 +30,10 @@ public:
   CutyCapt(CutyPage* page, int delay, OutputFormat format);
   QString      mOutput;
   int mScaledWidth;
+  int mOriginX;
+  int mOriginY;
+  int mCropWidth;
+  int mCropHeight;
   
 private slots:
   void DocumentComplete(bool ok);
