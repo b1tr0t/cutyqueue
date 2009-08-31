@@ -338,6 +338,8 @@ main(int argc, char *argv[]) {
   const char* argUserStyle = NULL;
   const char* argIconDbPath = NULL;
   
+  QString defaultUserAgent = NULL;
+  
   const char* queueAddress = "localhost";
   int queuePort = 22201;
   const char* primaryQueueName = "queue_fast";
@@ -491,6 +493,7 @@ main(int argc, char *argv[]) {
       body = QByteArray(value);
 
     } else if (strncmp("--user-agent", s, nlen) == 0) {
+      defaultUserAgent = QString(value);
       page.setUserAgent(value);
 
     } else if (strncmp("--out-format", s, nlen) == 0) {
@@ -630,18 +633,30 @@ main(int argc, char *argv[]) {
       int cropWidth = 0;
       int cropHeight = 0;
  
-      cout << "-- ready to check sizes " << tokens.size() << endl;
+      // cout << "-- ready to check sizes " << tokens.size() << endl;
       if (tokens.size() > 5) { 
           originX = atoi(tokens[5].c_str());   
           originY = atoi(tokens[6].c_str());
           cropWidth = atoi(tokens[7].c_str());
           cropHeight = atoi(tokens[8].c_str());          
-         } else { 
-             cout << "-- no optional parameters" << endl;             
-      }
+         } 
+      
+      if (tokens.size() > 9) { 
+          const char* useragent = tokens[9].c_str();
+          if (strcmp(useragent, "") != 0) {
+              page.setUserAgent(useragent);
+              cout << "-- page user agent override to: '" << useragent << "'" << endl;
+              } else { 
+                  cout << "-- Using default user agent: '" << defaultUserAgent.toStdString() << "'" << endl;
+                  page.setUserAgent(defaultUserAgent);
+              }
+      } else { 
+            cout << "-- Using default user agent: '" << defaultUserAgent.toStdString() << "'" << endl;
+            page.setUserAgent(defaultUserAgent);
+     }
+      
       cout << "-- done" << endl;
     
-
       main.mOutput = outfile;
       main.mScaledWidth = scaledWidth;
       main.mOriginX = originX;
@@ -658,7 +673,6 @@ main(int argc, char *argv[]) {
       cout << "-- originY is: '" << main.mOriginY << "'" << endl;
       cout << "-- cropWidth is: '" << main.mCropWidth << "'" << endl;
       cout << "-- cropHeight is: '" << main.mCropHeight << "'" << endl;
-
       
       qurl.setUrl(url);
       req.setUrl( qurl );

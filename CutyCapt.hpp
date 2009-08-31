@@ -28,7 +28,7 @@ public:
     BmpFormat, PpmFormat, XbmFormat, XpmFormat, OtherFormat };
 
   CutyCapt(CutyPage* page, int delay, OutputFormat format);
-  QString      mOutput;
+  QString mOutput;
   int mScaledWidth;
   int mOriginX;
   int mOriginY;
